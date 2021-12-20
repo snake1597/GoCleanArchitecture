@@ -20,7 +20,7 @@ func (r *userRepository) Register(user entities.User) (err error) {
 }
 
 func (r *userRepository) Login(request entities.User) (user entities.User, err error) {
-	err = r.db.Table("users").Where("account = ?", request.Account).Find(&user).Error
+	err = r.db.Table("users").Where("account = ?", request.Account).First(&user).Error
 	return user, err
 }
 
