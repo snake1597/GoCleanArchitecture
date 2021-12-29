@@ -1,0 +1,58 @@
+syntax = "proto3";
+option go_package = "proto/user/user.proto";
+package api;
+
+import "google/protobuf/empty.proto";
+
+service User {
+    rpc Register(RegisterRequest) returns (UserResponse){}
+    rpc Login(LoginRequest) returns (LoginResponse){}
+    rpc GetUser(UserRequest) returns (GetUserResponse){}
+    rpc GetAllUser(google.protobuf.Empty) returns (GetAllUserResponse){}
+    rpc UpdateUser(UpdateUserRequest) returns (UserResponse){}
+    rpc DeleteUser(UserRequest) returns (UserResponse){}
+}
+
+// Request
+message UserRequest {
+    string id = 1;
+}
+
+message RegisterRequest {
+    string account = 1;
+    string password = 2;
+    string name = 3;
+    string birthday = 4;
+}
+
+message LoginRequest {
+    string account = 1;
+    string password = 2;    
+}
+
+message UpdateUserRequest {
+    string id = 1;
+    string name = 2;
+    string birthday = 3; 
+}
+
+// Response
+message UserResponse {
+    string status = 1;
+}
+
+message LoginResponse {
+    string userId = 1;
+    string accessToken = 2;
+    string refreshToken =3;
+}
+
+message GetUserResponse {
+    string id = 1;
+    string name = 2;
+    string birthday = 3;
+}
+
+message GetAllUserResponse {
+    repeated GetUserResponse userList = 1;
+}

@@ -1,16 +1,21 @@
 package main
 
 import (
+	grpcDelivery "GoCleanArchitecture/delivery/grpc"
+	grpcMiddlewares "GoCleanArchitecture/delivery/grpc/middlewares"
 	delivery "GoCleanArchitecture/delivery/http"
 	middlewares "GoCleanArchitecture/delivery/http/middlewares"
 	"GoCleanArchitecture/entities"
 	repo "GoCleanArchitecture/repository"
 	usecase "GoCleanArchitecture/usecase"
 	"fmt"
+	"log"
+	"net"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -61,6 +66,20 @@ func main() {
 	userRepo := repo.NewUserRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepo)
 	delivery.NewUserHandler(router, userUsecase, tokenUsecase, authMiddleware)
+
+	// grpc
+	grpcAuthMiddleware := grpcMiddlewares.NewAuthMiddlewares(tokenUsecase)
+
+	lis, err := net.Listen("tcp", ":8081")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer(grpc.UnaryInterceptor(grpcAuthMiddleware.UnaryServerInterceptor))
+	//s := grpc.NewServer()
+	grpcDelivery.NewUserHandler(s, userUsecase, tokenUsecase)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 
 	router.Run(":8080")
 }
