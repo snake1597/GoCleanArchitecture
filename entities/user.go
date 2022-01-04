@@ -6,7 +6,8 @@ type User struct {
 	ID           int       `gorm:"primaryKey; id" json:"id"`
 	Account      string    `gorm:"account; unique; type:varchar(100); not null;" json:"account" `
 	Password     string    `gorm:"password; type:varchar(30); not null;" json:"password" `
-	Name         string    `gorm:"name; type:varchar(50); " json:"name" `
+	FirstName    string    `gorm:"first_name; type:varchar(50); " json:"first_name" `
+	LastName     string    `gorm:"last_name; type:varchar(50); " json:"last_name" `
 	Birthday     string    `gorm:"birthday; type:varchar(10);" json:"birthday" `
 	RefreshToken string    `gorm:"refresh_token; type:varchar(30);" json:"refresh_token" `
 	CreatedAt    time.Time `gorm:"created_at" json:"created_at" `

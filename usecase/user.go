@@ -81,8 +81,11 @@ func (u *userUsecase) GetAllUser() ([]entities.User, error) {
 func (u *userUsecase) UpdateUser(id string, user entities.User) error {
 	data := make(map[string]interface{})
 
-	if user.Name != "" {
-		data["name"] = user.Name
+	if user.FirstName != "" {
+		data["firstName"] = user.FirstName
+	}
+	if user.LastName != "" {
+		data["lastName"] = user.LastName
 	}
 	if user.Birthday != "" {
 		data["birthday"] = user.Birthday

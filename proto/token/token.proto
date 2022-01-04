@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "proto/token/token.proto";
+package api;
+
+service Token {
+    rpc RefreshAccessToken(tokenRequest) returns (tokenResponse){}
+} 
+
+message tokenRequest {
+    string userId = 1;
+    string token = 2;
+}
+
+message tokenResponse {
+    string userId = 1;
+    string accessToken = 2;
+    string refreshToken = 3;
+}

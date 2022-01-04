@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var authAllowList = map[string]string{"/api.User/Register": "auth", "/api.User/Login": "auth"}
+var authAllowList = map[string]string{"/api.User/Register": "auth", "/api.User/Login": "auth", "/api.Token/RefreshAccessToken": "auth"}
 
 type AuthMiddlewares struct {
 	tokenUsecase entities.TokenUsecase

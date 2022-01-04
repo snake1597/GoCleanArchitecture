@@ -15,14 +15,15 @@ service User {
 
 // Request
 message UserRequest {
-    string id = 1;
+    string userId = 1;
 }
 
 message RegisterRequest {
     string account = 1;
     string password = 2;
-    string name = 3;
-    string birthday = 4;
+    string firstName = 3;
+    string lastName = 4;
+    string birthday = 5;
 }
 
 message LoginRequest {
@@ -31,9 +32,10 @@ message LoginRequest {
 }
 
 message UpdateUserRequest {
-    string id = 1;
-    string name = 2;
-    string birthday = 3; 
+    string userId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string birthday = 4; 
 }
 
 // Response
@@ -48,9 +50,10 @@ message LoginResponse {
 }
 
 message GetUserResponse {
-    string id = 1;
-    string name = 2;
-    string birthday = 3;
+    string userId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string birthday = 4;
 }
 
 message GetAllUserResponse {

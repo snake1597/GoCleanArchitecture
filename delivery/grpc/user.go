@@ -27,10 +27,11 @@ func NewUserHandler(s *grpc.Server, userUsecase entities.UserUsecase, tokenUseca
 
 func (h *UserHandler) Register(ctx context.Context, in *pb.RegisterRequest) (response *pb.UserResponse, err error) {
 	user := entities.User{
-		Account:  in.GetAccount(),
-		Password: in.GetPassword(),
-		Name:     in.GetName(),
-		Birthday: in.GetBirthday(),
+		Account:   in.GetAccount(),
+		Password:  in.GetPassword(),
+		FirstName: in.GetFirstName(),
+		LastName:  in.GetLastName(),
+		Birthday:  in.GetBirthday(),
 	}
 
 	err = h.UserUsecase.Register(user)
@@ -71,15 +72,16 @@ func (h *UserHandler) Login(ctx context.Context, in *pb.LoginRequest) (response 
 }
 
 func (h *UserHandler) GetUser(ctx context.Context, in *pb.UserRequest) (response *pb.GetUserResponse, err error) {
-	user, err := h.UserUsecase.GetUser(in.GetId())
+	user, err := h.UserUsecase.GetUser(in.GetUserId())
 	if err != nil {
 		return nil, err
 	}
 
 	response = &pb.GetUserResponse{
-		Id:       strconv.Itoa(user.ID),
-		Name:     user.Name,
-		Birthday: user.Birthday,
+		UserId:    strconv.Itoa(user.ID),
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Birthday:  user.Birthday,
 	}
 
 	return response, nil
@@ -94,9 +96,10 @@ func (h *UserHandler) GetAllUser(ctx context.Context, in *emptypb.Empty) (respon
 	list := make([]*pb.GetUserResponse, len(userList))
 	for _, user := range userList {
 		a := &pb.GetUserResponse{
-			Id:       strconv.Itoa(user.ID),
-			Name:     user.Name,
-			Birthday: user.Birthday,
+			UserId:    strconv.Itoa(user.ID),
+			FirstName: user.FirstName,
+			LastName:  user.LastName,
+			Birthday:  user.Birthday,
 		}
 		list = append(list, a)
 	}
@@ -109,11 +112,12 @@ func (h *UserHandler) GetAllUser(ctx context.Context, in *emptypb.Empty) (respon
 
 func (h *UserHandler) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (response *pb.UserResponse, err error) {
 	user := entities.User{
-		Name:     in.GetName(),
-		Birthday: in.GetBirthday(),
+		FirstName: in.GetFirstName(),
+		LastName:  in.GetLastName(),
+		Birthday:  in.GetBirthday(),
 	}
 
-	err = h.UserUsecase.UpdateUser(in.GetId(), user)
+	err = h.UserUsecase.UpdateUser(in.GetUserId(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +130,7 @@ func (h *UserHandler) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 
 func (h *UserHandler) DeleteUser(ctx context.Context, in *pb.UserRequest) (response *pb.UserResponse, err error) {
 
-	err = h.UserUsecase.DeleteUser(in.GetId())
+	err = h.UserUsecase.DeleteUser(in.GetUserId())
 	if err != nil {
 		return nil, err
 	}

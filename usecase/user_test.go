@@ -176,12 +176,12 @@ func TestGetAllUser(t *testing.T) {
 	mockUserRepo := new(mocks.UserRepository)
 	mockUser := []entities.User{
 		{
-			ID:   8,
-			Name: "firstUser",
+			ID:        8,
+			FirstName: "firstUser",
 		},
 		{
-			ID:   9,
-			Name: "secondUser",
+			ID:        9,
+			FirstName: "secondUser",
 		},
 	}
 
