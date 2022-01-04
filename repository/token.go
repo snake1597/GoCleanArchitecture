@@ -20,6 +20,6 @@ func (r *tokenRepository) UpdateRefreshToken(id string, refreshToken string) (er
 }
 
 func (r *tokenRepository) CheckRefreshToken(id string, refreshToken string) (user entities.User, err error) {
-	err = r.db.Table("users").Where("id = ? and refresh_token = ?", id, refreshToken).Find(&user).Error
+	err = r.db.Table("users").Where("id = ? and refresh_token = ?", id, refreshToken).First(&user).Error
 	return user, err
 }
