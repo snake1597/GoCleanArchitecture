@@ -4,6 +4,7 @@ import (
 	"GoCleanArchitecture/delivery/http/middlewares"
 	"GoCleanArchitecture/entities"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -85,7 +86,14 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": user})
+	response := map[string]string{
+		"user_id":    strconv.Itoa(user.ID),
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+		"birthday":   user.Birthday,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": response})
 }
 
 func (h *UserHandler) GetAllUser(c *gin.Context) {
