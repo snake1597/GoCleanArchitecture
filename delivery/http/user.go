@@ -90,7 +90,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		"user_id":    strconv.Itoa(user.ID),
 		"first_name": user.FirstName,
 		"last_name":  user.LastName,
-		"birthday":   user.Birthday,
+		"birthday":   user.Birthday.Format("2006-01-02"),
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "data": response})
