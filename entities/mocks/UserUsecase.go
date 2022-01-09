@@ -51,14 +51,16 @@ func (_m *UserUsecase) GetAllUser() ([]entities.User, error) {
 }
 
 // GetUser provides a mock function with given fields: id
-func (_m *UserUsecase) GetUser(id string) (entities.User, error) {
+func (_m *UserUsecase) GetUser(id string) (*entities.User, error) {
 	ret := _m.Called(id)
 
-	var r0 entities.User
-	if rf, ok := ret.Get(0).(func(string) entities.User); ok {
+	var r0 *entities.User
+	if rf, ok := ret.Get(0).(func(string) *entities.User); ok {
 		r0 = rf(id)
 	} else {
-		r0 = ret.Get(0).(entities.User)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
 	}
 
 	var r1 error
@@ -71,20 +73,20 @@ func (_m *UserUsecase) GetUser(id string) (entities.User, error) {
 	return r0, r1
 }
 
-// Login provides a mock function with given fields: user
-func (_m *UserUsecase) Login(user entities.User) (string, error) {
-	ret := _m.Called(user)
+// Login provides a mock function with given fields: request
+func (_m *UserUsecase) Login(request *entities.User) (string, error) {
+	ret := _m.Called(request)
 
 	var r0 string
-	if rf, ok := ret.Get(0).(func(entities.User) string); ok {
-		r0 = rf(user)
+	if rf, ok := ret.Get(0).(func(*entities.User) string); ok {
+		r0 = rf(request)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entities.User) error); ok {
-		r1 = rf(user)
+	if rf, ok := ret.Get(1).(func(*entities.User) error); ok {
+		r1 = rf(request)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -92,13 +94,13 @@ func (_m *UserUsecase) Login(user entities.User) (string, error) {
 	return r0, r1
 }
 
-// Register provides a mock function with given fields: user
-func (_m *UserUsecase) Register(user entities.User) error {
-	ret := _m.Called(user)
+// Register provides a mock function with given fields: request
+func (_m *UserUsecase) Register(request *entities.User) error {
+	ret := _m.Called(request)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entities.User) error); ok {
-		r0 = rf(user)
+	if rf, ok := ret.Get(0).(func(*entities.User) error); ok {
+		r0 = rf(request)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -107,11 +109,11 @@ func (_m *UserUsecase) Register(user entities.User) error {
 }
 
 // UpdateUser provides a mock function with given fields: id, user
-func (_m *UserUsecase) UpdateUser(id string, user entities.User) error {
+func (_m *UserUsecase) UpdateUser(id string, user *entities.User) error {
 	ret := _m.Called(id, user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(string, entities.User) error); ok {
+	if rf, ok := ret.Get(0).(func(string, *entities.User) error); ok {
 		r0 = rf(id, user)
 	} else {
 		r0 = ret.Error(0)

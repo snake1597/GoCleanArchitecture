@@ -15,19 +15,19 @@ type User struct {
 }
 
 type UserRepository interface {
-	Register(request User) (err error)
-	Login(request User) (user User, err error)
-	GetUser(id string) (user User, err error)
+	Register(request *User) (err error)
+	Login(request *User) (user *User, err error)
+	GetUser(id string) (user *User, err error)
 	GetAllUser() (userList []User, err error)
 	UpdateUser(id string, data map[string]interface{}) (err error)
 	DeleteUser(id string) (err error)
 }
 
 type UserUsecase interface {
-	Register(user User) (err error)
-	Login(user User) (id string, err error)
-	GetUser(id string) (user User, err error)
+	Register(request *User) (err error)
+	Login(request *User) (id string, err error)
+	GetUser(id string) (user *User, err error)
 	GetAllUser() (userList []User, err error)
-	UpdateUser(id string, user User) (err error)
+	UpdateUser(id string, user *User) (err error)
 	DeleteUser(id string) (err error)
 }

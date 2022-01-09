@@ -51,14 +51,16 @@ func (_m *UserRepository) GetAllUser() ([]entities.User, error) {
 }
 
 // GetUser provides a mock function with given fields: id
-func (_m *UserRepository) GetUser(id string) (entities.User, error) {
+func (_m *UserRepository) GetUser(id string) (*entities.User, error) {
 	ret := _m.Called(id)
 
-	var r0 entities.User
-	if rf, ok := ret.Get(0).(func(string) entities.User); ok {
+	var r0 *entities.User
+	if rf, ok := ret.Get(0).(func(string) *entities.User); ok {
 		r0 = rf(id)
 	} else {
-		r0 = ret.Get(0).(entities.User)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
 	}
 
 	var r1 error
@@ -72,18 +74,20 @@ func (_m *UserRepository) GetUser(id string) (entities.User, error) {
 }
 
 // Login provides a mock function with given fields: request
-func (_m *UserRepository) Login(request entities.User) (entities.User, error) {
+func (_m *UserRepository) Login(request *entities.User) (*entities.User, error) {
 	ret := _m.Called(request)
 
-	var r0 entities.User
-	if rf, ok := ret.Get(0).(func(entities.User) entities.User); ok {
+	var r0 *entities.User
+	if rf, ok := ret.Get(0).(func(*entities.User) *entities.User); ok {
 		r0 = rf(request)
 	} else {
-		r0 = ret.Get(0).(entities.User)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entities.User) error); ok {
+	if rf, ok := ret.Get(1).(func(*entities.User) error); ok {
 		r1 = rf(request)
 	} else {
 		r1 = ret.Error(1)
@@ -93,11 +97,11 @@ func (_m *UserRepository) Login(request entities.User) (entities.User, error) {
 }
 
 // Register provides a mock function with given fields: request
-func (_m *UserRepository) Register(request entities.User) error {
+func (_m *UserRepository) Register(request *entities.User) error {
 	ret := _m.Called(request)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entities.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*entities.User) error); ok {
 		r0 = rf(request)
 	} else {
 		r0 = ret.Error(0)

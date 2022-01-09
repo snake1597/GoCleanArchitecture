@@ -26,7 +26,7 @@ func NewUserHandler(s *grpc.Server, userUsecase entities.UserUsecase, tokenUseca
 }
 
 func (h *UserHandler) Register(ctx context.Context, in *pb.RegisterRequest) (response *pb.UserResponse, err error) {
-	user := entities.User{
+	user := &entities.User{
 		Account:   in.GetAccount(),
 		Password:  in.GetPassword(),
 		FirstName: in.GetFirstName(),
@@ -47,7 +47,7 @@ func (h *UserHandler) Register(ctx context.Context, in *pb.RegisterRequest) (res
 }
 
 func (h *UserHandler) Login(ctx context.Context, in *pb.LoginRequest) (response *pb.LoginResponse, err error) {
-	user := entities.User{
+	user := &entities.User{
 		Account:  in.GetAccount(),
 		Password: in.GetPassword(),
 	}
@@ -111,7 +111,7 @@ func (h *UserHandler) GetAllUser(ctx context.Context, in *emptypb.Empty) (respon
 }
 
 func (h *UserHandler) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (response *pb.UserResponse, err error) {
-	user := entities.User{
+	user := &entities.User{
 		FirstName: in.GetFirstName(),
 		LastName:  in.GetLastName(),
 		Birthday:  in.GetBirthday(),

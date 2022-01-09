@@ -25,7 +25,7 @@ func NewUserUsecase(userRepo entities.UserRepository) entities.UserUsecase {
 	return &userUsecase{userRepo}
 }
 
-func (u *userUsecase) Register(user entities.User) (err error) {
+func (u *userUsecase) Register(user *entities.User) (err error) {
 	if user.Account == "" {
 		return fmt.Errorf("account can not be empty")
 	}
@@ -46,7 +46,7 @@ func (u *userUsecase) Register(user entities.User) (err error) {
 	return err
 }
 
-func (u *userUsecase) Login(request entities.User) (userId string, err error) {
+func (u *userUsecase) Login(request *entities.User) (userId string, err error) {
 	user, err := u.userRepo.Login(request)
 	if err != nil {
 		return "", fmt.Errorf("account is not exist")
@@ -60,17 +60,17 @@ func (u *userUsecase) Login(request entities.User) (userId string, err error) {
 	return userId, err
 }
 
-func (u *userUsecase) GetUser(id string) (entities.User, error) {
-	user, err := u.userRepo.GetUser(id)
+func (u *userUsecase) GetUser(id string) (user *entities.User, err error) {
+	user, err = u.userRepo.GetUser(id)
 	if err != nil {
-		return entities.User{}, err
+		return &entities.User{}, err
 	}
 
 	return user, nil
 }
 
-func (u *userUsecase) GetAllUser() ([]entities.User, error) {
-	userList, err := u.userRepo.GetAllUser()
+func (u *userUsecase) GetAllUser() (userList []entities.User, err error) {
+	userList, err = u.userRepo.GetAllUser()
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (u *userUsecase) GetAllUser() ([]entities.User, error) {
 	return userList, err
 }
 
-func (u *userUsecase) UpdateUser(id string, user entities.User) error {
+func (u *userUsecase) UpdateUser(id string, user *entities.User) (err error) {
 	data := make(map[string]interface{})
 
 	if user.FirstName != "" {
@@ -91,7 +91,7 @@ func (u *userUsecase) UpdateUser(id string, user entities.User) error {
 		data["birthday"] = user.Birthday
 	}
 
-	err := u.userRepo.UpdateUser(id, data)
+	err = u.userRepo.UpdateUser(id, data)
 	if err != nil {
 		return fmt.Errorf("update failed")
 	}
@@ -99,8 +99,8 @@ func (u *userUsecase) UpdateUser(id string, user entities.User) error {
 	return nil
 }
 
-func (u *userUsecase) DeleteUser(id string) error {
-	err := u.userRepo.DeleteUser(id)
+func (u *userUsecase) DeleteUser(id string) (err error) {
+	err = u.userRepo.DeleteUser(id)
 	if err != nil {
 		return fmt.Errorf("delete failed")
 	}

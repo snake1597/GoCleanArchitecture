@@ -1,17 +1,15 @@
 package main
 
 import (
-	grpcDelivery "GoCleanArchitecture/delivery/grpc"
-	grpcMiddlewares "GoCleanArchitecture/delivery/grpc/middlewares"
+	httpDelivery "GoCleanArchitecture/delivery/http"
+	httpMiddlewares "GoCleanArchitecture/delivery/http/middlewares"
 	repo "GoCleanArchitecture/repository"
 	usecase "GoCleanArchitecture/usecase"
 	"fmt"
-	"log"
-	"net"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -56,26 +54,26 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(userRepo)
 
 	// http
-	// router := gin.Default()
-	// delivery.NewTokenHandler(router, tokenUsecase)
-	// authMiddleware := middlewares.NewAuthMiddlewares(tokenUsecase)
-	// delivery.NewUserHandler(router, userUsecase, tokenUsecase, authMiddleware)
+	router := gin.Default()
+	httpDelivery.NewTokenHandler(router, tokenUsecase)
+	authMiddleware := httpMiddlewares.NewAuthMiddlewares(tokenUsecase)
+	httpDelivery.NewUserHandler(router, userUsecase, tokenUsecase, authMiddleware)
 
-	// router.Run(":8080")
+	router.Run(":8080")
 
 	// grpc
-	grpcAuthMiddleware := grpcMiddlewares.NewAuthMiddlewares(tokenUsecase)
-	s := grpc.NewServer(grpc.UnaryInterceptor(grpcAuthMiddleware.UnaryServerInterceptor))
+	// grpcAuthMiddleware := grpcMiddlewares.NewAuthMiddlewares(tokenUsecase)
+	// s := grpc.NewServer(grpc.UnaryInterceptor(grpcAuthMiddleware.UnaryServerInterceptor))
 
-	grpcDelivery.NewTokenHandler(s, tokenUsecase)
-	grpcDelivery.NewUserHandler(s, userUsecase, tokenUsecase)
+	// grpcDelivery.NewTokenHandler(s, tokenUsecase)
+	// grpcDelivery.NewUserHandler(s, userUsecase, tokenUsecase)
 
-	lis, err := net.Listen("tcp", ":8081")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
+	// lis, err := net.Listen("tcp", ":8081")
+	// if err != nil {
+	// 	log.Fatalf("failed to listen: %v", err)
+	// }
 
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	// if err := s.Serve(lis); err != nil {
+	// 	log.Fatalf("failed to serve: %v", err)
+	// }
 }

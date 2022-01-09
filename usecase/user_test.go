@@ -16,7 +16,7 @@ func TestRegister(t *testing.T) {
 	mockUserRepo := new(mocks.UserRepository)
 
 	t.Run("success", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "12345678",
 		}
@@ -31,7 +31,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("email is null", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "",
 			Password: "12345678",
 		}
@@ -42,7 +42,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("pw is null", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "",
 		}
@@ -53,7 +53,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("incorrect email format", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail",
 			Password: "12345678",
 		}
@@ -64,7 +64,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("incorrect pw format", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "123456",
 		}
@@ -73,7 +73,7 @@ func TestRegister(t *testing.T) {
 		err := u.Register(mockUser)
 		assert.Error(t, err)
 
-		mockUser = entities.User{
+		mockUser = &entities.User{
 			Account:  "a@gmail.com",
 			Password: "123456789123456789123456789123456789", // 36 numbers
 		}
@@ -86,7 +86,7 @@ func TestLogin(t *testing.T) {
 	mockUserRepo := new(mocks.UserRepository)
 
 	t.Run("success", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "12345678",
 		}
@@ -103,7 +103,7 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("invalid account", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "12345678",
 		}
@@ -121,7 +121,7 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("invalid pw", func(t *testing.T) {
-		mockUser := entities.User{
+		mockUser := &entities.User{
 			Account:  "a@gmail.com",
 			Password: "12345678",
 		}
@@ -214,7 +214,7 @@ func TestGetAllUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	mockUserRepo := new(mocks.UserRepository)
-	mockUser := entities.User{
+	mockUser := &entities.User{
 		ID: 9,
 	}
 

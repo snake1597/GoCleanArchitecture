@@ -29,7 +29,7 @@ func NewUserHandler(router *gin.Engine, userUsecase entities.UserUsecase, tokenU
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
-	var user entities.User
+	var user *entities.User
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
@@ -43,11 +43,11 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"status": "success", "data": nil})
+	c.JSON(http.StatusCreated, gin.H{"status": "success"})
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
-	var user entities.User
+	var user *entities.User
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
@@ -67,13 +67,13 @@ func (h *UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	data := map[string]string{
+	response := map[string]string{
 		"user_id":       userId,
 		"access_token":  token.AccessToken,
 		"refresh_token": token.RefreshToken,
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": data})
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": response})
 }
 
 func (h *UserHandler) GetUser(c *gin.Context) {
@@ -99,7 +99,7 @@ func (h *UserHandler) GetAllUser(c *gin.Context) {
 }
 
 func (h *UserHandler) PatchToUpdateUser(c *gin.Context) {
-	var user entities.User
+	var user *entities.User
 	id := c.Param("userId")
 
 	err := c.ShouldBindJSON(&user)
@@ -114,7 +114,7 @@ func (h *UserHandler) PatchToUpdateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": nil})
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
 func (h *UserHandler) DeleteUser(c *gin.Context) {
@@ -126,5 +126,5 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": nil})
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }

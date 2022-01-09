@@ -14,17 +14,17 @@ func NewUserRepository(db *gorm.DB) entities.UserRepository {
 	return &userRepository{db}
 }
 
-func (r *userRepository) Register(user entities.User) (err error) {
+func (r *userRepository) Register(user *entities.User) (err error) {
 	err = r.db.Create(&user).Error
 	return err
 }
 
-func (r *userRepository) Login(request entities.User) (user entities.User, err error) {
+func (r *userRepository) Login(request *entities.User) (user *entities.User, err error) {
 	err = r.db.Table("users").Where("account = ?", request.Account).First(&user).Error
 	return user, err
 }
 
-func (r *userRepository) GetUser(id string) (user entities.User, err error) {
+func (r *userRepository) GetUser(id string) (user *entities.User, err error) {
 	err = r.db.Table("users").Where("id = ?", id).Find(&user).Error
 	return user, err
 }
