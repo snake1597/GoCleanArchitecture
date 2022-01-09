@@ -34,6 +34,18 @@ func (u *userUsecase) Register(user *entities.User) (err error) {
 		return fmt.Errorf("password can not be empty")
 	}
 
+	if user.FirstName == "" {
+		return fmt.Errorf("first name can not be empty")
+	}
+
+	if user.LastName == "" {
+		return fmt.Errorf("last name can not be empty")
+	}
+
+	if user.Birthday == "" {
+		return fmt.Errorf("birthday can not be empty")
+	}
+
 	if !verifyEmailFormat(user.Account) {
 		return fmt.Errorf("incorrect email format")
 	}
