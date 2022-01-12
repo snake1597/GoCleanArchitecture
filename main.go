@@ -1,3 +1,7 @@
+// Schemes: http
+// Host: localhost
+// Version: 0.0.1
+// swagger:meta
 package main
 
 import (

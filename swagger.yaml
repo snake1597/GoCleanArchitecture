@@ -1,0 +1,7 @@
+host: localhost
+info:
+  version: 0.0.1
+paths: {}
+schemes:
+- http
+swagger: "2.0"
