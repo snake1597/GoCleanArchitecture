@@ -1,3 +1,94 @@
+basePath: /api/v1
+definitions:
+  RegisterRequest:
+    properties:
+      Account:
+        description: The user account
+        example: a@gmail.com
+        maxLength: 100
+        pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
+        type: string
+      Password:
+        description: The user password
+        example: "12345678"
+        maxLength: 30
+        minLength: 8
+        pattern: ^([a-zA-Z0-9]){8,30}$
+        type: string
+    required:
+    - Account
+    - Password
+    type: object
+    x-go-package: GoCleanArchitecture/docs/api
+  User:
+    properties:
+      account:
+        maxLength: 100
+        pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
+        type: string
+        x-go-name: Account
+      birthday:
+        format: date-time
+        type: string
+        x-go-name: Birthday
+      created_at:
+        format: date-time
+        type: string
+        x-go-name: CreatedAt
+      first_name:
+        maxLength: 50
+        type: string
+        x-go-name: FirstName
+      id:
+        format: int64
+        minimum: 1
+        type: integer
+        x-go-name: ID
+      last_name:
+        maxLength: 50
+        type: string
+        x-go-name: LastName
+      password:
+        maxLength: 30
+        minLength: 8
+        pattern: ^([a-zA-Z0-9]){8,30}$
+        type: string
+        x-go-name: Password
+      refresh_token:
+        maxLength: 30
+        type: string
+        x-go-name: RefreshToken
+      updated_at:
+        format: date-time
+        type: string
+        x-go-name: UpdatedAt
+    type: object
+    x-go-package: GoCleanArchitecture/entities
+  UserError:
+    properties:
+      Message:
+        description: The error message
+        example: error message
+        type: string
+      Status:
+        description: The error status
+        example: failed
+        type: string
+    required:
+    - Status
+    - Message
+    type: object
+    x-go-package: GoCleanArchitecture/docs/api
+  UserResponse:
+    properties:
+      Status:
+        description: The request success status
+        example: success
+        type: string
+    required:
+    - Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/api
 host: localhost
 info:
   description: |-
@@ -8,7 +99,40 @@ info:
     that are available to turn go code into a fully compliant swagger 2.0 spec
   title: Member system API.
   version: 0.0.1
-paths: {}
+paths:
+  /users/register:
+    post:
+      operationId: register
+      parameters:
+      - description: The Register request
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/RegisterRequest'
+      responses:
+        "200":
+          $ref: '#/responses/UserResponse'
+        "400":
+          $ref: '#/responses/UserError'
+      summary: Register a new user account.
+      tags:
+      - users
+responses:
+  UserError:
+    description: A UserError is an error that is used when the required input fails
+      validation.
+    schema:
+      $ref: '#/definitions/UserError'
+  UserResponse:
+    description: A UserResponse is an error that is used when the required input fails
+      validation.
+    schema:
+      $ref: '#/definitions/UserResponse'
 schemes:
 - http
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

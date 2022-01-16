@@ -2,6 +2,7 @@ package http
 
 import (
 	"GoCleanArchitecture/delivery/http/middlewares"
+	"GoCleanArchitecture/docs/swagger"
 	"GoCleanArchitecture/entities"
 	"net/http"
 	"strconv"
@@ -29,18 +30,24 @@ func NewUserHandler(router *gin.Engine, userUsecase entities.UserUsecase, tokenU
 	}
 }
 
+// swagger:route POST /users/register users register
+// Register a new user account.
+// Responses:
+// 	200: UserResponse
+// 	400: UserError
 func (h *UserHandler) Register(c *gin.Context) {
 	var user *entities.User
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		//c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
+		c.JSON(http.StatusBadRequest, swagger.UserError{Status: "failed", Message: err.Error()})
 		return
 	}
 
 	err = h.UserUsecase.Register(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
@@ -52,19 +59,19 @@ func (h *UserHandler) Login(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
 	userId, err := h.UserUsecase.Login(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
 	token, err := h.TokenUsecase.CreateToken(userId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
@@ -82,7 +89,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 
 	user, err := h.UserUsecase.GetUser(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": "invalid id"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": "invalid id"})
 		return
 	}
 
@@ -99,7 +106,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 func (h *UserHandler) GetAllUser(c *gin.Context) {
 	userList, err := h.UserUsecase.GetAllUser()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
@@ -112,13 +119,13 @@ func (h *UserHandler) PatchToUpdateUser(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
 	err = h.UserUsecase.UpdateUser(id, user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 
@@ -130,7 +137,7 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 
 	err := h.UserUsecase.DeleteUser(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "failed", "message": err.Error()})
 		return
 	}
 

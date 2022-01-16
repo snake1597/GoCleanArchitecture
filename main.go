@@ -8,9 +8,16 @@
 //
 // Schemes: http
 // Host: localhost
+// Base path: /api/v1
 // Version: 0.0.1
 // Consumes: application/json
 // Produces: application/json
+// Security: Bearer
+// securityDefinitions:
+//    Bearer:
+//      type: apiKey
+//      name: Authorization
+//      in: header
 // swagger:meta
 package main
 
