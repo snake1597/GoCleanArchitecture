@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"GoCleanArchitecture/docs/swagger"
 	"GoCleanArchitecture/entities"
 	"net/http"
 	"strings"
@@ -20,7 +21,7 @@ func (m *AuthMiddlewares) ParseToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		auth := c.Request.Header.Get("Authorization")
 		if auth == "" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "failed", "error": "token is require"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, swagger.GenericError{Status: "failed", Message: "token is require"})
 			return
 		}
 
@@ -28,13 +29,13 @@ func (m *AuthMiddlewares) ParseToken() gin.HandlerFunc {
 
 		tokenInfo, err := m.tokenUsecase.VerifyToken(token)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "failed", "error": err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, swagger.GenericError{Status: "failed", Message: err.Error()})
 			return
 		}
 
 		userId := c.Param("userId")
 		if userId != "" && userId != tokenInfo["user_id"] {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "failed", "error": "invalid user id"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, swagger.GenericError{Status: "failed", Message: "invalid user id"})
 			return
 		}
 

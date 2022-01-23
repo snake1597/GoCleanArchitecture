@@ -25,7 +25,7 @@ func (r *userRepository) Login(request *entities.User) (user *entities.User, err
 }
 
 func (r *userRepository) GetUser(id string) (user *entities.User, err error) {
-	err = r.db.Table("users").Where("id = ?", id).Find(&user).Error
+	err = r.db.Table("users").Where("id = ?", id).Omit("password").Find(&user).Error
 	return user, err
 }
 

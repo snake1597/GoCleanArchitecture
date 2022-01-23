@@ -1,33 +1,147 @@
 basePath: /api/v1
 definitions:
+  GenericError:
+    properties:
+      message:
+        description: The error message
+        example: error message
+        type: string
+        x-go-name: Message
+      status:
+        description: The error status
+        example: failed
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
+  GenericResponse:
+    properties:
+      status:
+        description: The request success status
+        example: success
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
+  GetAllUserResponse:
+    properties:
+      data:
+        description: The user information
+        items:
+          $ref: '#/definitions/User'
+        type: array
+        x-go-name: Data
+      status:
+        description: The request success status
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
+  GetUserResponse:
+    properties:
+      data:
+        $ref: '#/definitions/User'
+      status:
+        description: The request success status
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
+  LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/Token'
+      status:
+        description: The request success status
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
   RegisterRequest:
     properties:
-      Account:
+      account:
         description: The user account
         example: a@gmail.com
         maxLength: 100
         pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
         type: string
-      Password:
+        x-go-name: Account
+      birthday:
+        description: The user birthday
+        example: "1970-01-01"
+        format: date-time
+        type: string
+        x-go-name: Birthday
+      first_name:
+        description: The user first name
+        maxLength: 50
+        type: string
+        x-go-name: FirstName
+      last_name:
+        description: The user last name
+        maxLength: 50
+        type: string
+        x-go-name: LastName
+      password:
         description: The user password
         example: "12345678"
         maxLength: 30
         minLength: 8
         pattern: ^([a-zA-Z0-9]){8,30}$
         type: string
+        x-go-name: Password
     required:
-    - Account
-    - Password
+    - account
+    - password
+    - first_name
+    - last_name
+    - birthday
     type: object
-    x-go-package: GoCleanArchitecture/docs/api
+    x-go-package: GoCleanArchitecture/docs/swagger
+  Token:
+    properties:
+      access_token:
+        description: The API access token, made by JWT
+        type: string
+        x-go-name: AccessToken
+      refresh_token:
+        description: When access token was expired, you have to use this to refresh
+          access token
+        maxLength: 30
+        type: string
+        x-go-name: RefreshToken
+    type: object
+    x-go-package: GoCleanArchitecture/entities
+  UpdateUserRequest:
+    properties:
+      birthday:
+        description: The user birthday
+        example: "1970-01-01"
+        format: date-time
+        type: string
+        x-go-name: Birthday
+      first_name:
+        description: The user first name
+        maxLength: 50
+        type: string
+        x-go-name: FirstName
+      last_name:
+        description: The user last name
+        maxLength: 50
+        type: string
+        x-go-name: LastName
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
   User:
     properties:
       account:
+        example: a@gmail.com
         maxLength: 100
         pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
         type: string
         x-go-name: Account
       birthday:
+        example: "1970-01-01"
         format: date-time
         type: string
         x-go-name: Birthday
@@ -48,12 +162,6 @@ definitions:
         maxLength: 50
         type: string
         x-go-name: LastName
-      password:
-        maxLength: 30
-        minLength: 8
-        pattern: ^([a-zA-Z0-9]){8,30}$
-        type: string
-        x-go-name: Password
       refresh_token:
         maxLength: 30
         type: string
@@ -64,31 +172,6 @@ definitions:
         x-go-name: UpdatedAt
     type: object
     x-go-package: GoCleanArchitecture/entities
-  UserError:
-    properties:
-      Message:
-        description: The error message
-        example: error message
-        type: string
-      Status:
-        description: The error status
-        example: failed
-        type: string
-    required:
-    - Status
-    - Message
-    type: object
-    x-go-package: GoCleanArchitecture/docs/api
-  UserResponse:
-    properties:
-      Status:
-        description: The request success status
-        example: success
-        type: string
-    required:
-    - Status
-    type: object
-    x-go-package: GoCleanArchitecture/docs/api
 host: localhost
 info:
   description: |-
@@ -100,9 +183,122 @@ info:
   title: Member system API.
   version: 0.0.1
 paths:
+  /token/{userId}:
+    patch:
+      operationId: refreshAccessToken
+      parameters:
+      - description: user id
+        format: int64
+        in: path
+        minimum: 1
+        name: userId
+        required: true
+        type: string
+        x-go-name: UserId
+      responses:
+        "200":
+          $ref: '#/responses/loginResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      security:
+      - Bearer: []
+      summary: Refresh the access token when it was expired.
+      tags:
+      - token
+  /users:
+    get:
+      operationId: getAllUser
+      responses:
+        "200":
+          $ref: '#/responses/getAllUserResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      summary: Get all the user profile.
+      tags:
+      - users
+  /users/{userId}:
+    delete:
+      operationId: deleteUser
+      parameters:
+      - description: user id
+        format: int64
+        in: path
+        minimum: 1
+        name: userId
+        required: true
+        type: string
+        x-go-name: UserId
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      security:
+      - Bearer: []
+      summary: Delete a user.
+      tags:
+      - users
+    get:
+      operationId: getUser
+      parameters:
+      - description: user id
+        format: int64
+        in: path
+        minimum: 1
+        name: userId
+        required: true
+        type: string
+        x-go-name: UserId
+      responses:
+        "200":
+          $ref: '#/responses/getUserResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      security:
+      - Bearer: []
+      summary: Get the user profile by user id.
+      tags:
+      - users
+    patch:
+      operationId: updateUser
+      parameters:
+      - description: user id
+        format: int64
+        in: path
+        minimum: 1
+        name: userId
+        required: true
+        type: string
+        x-go-name: UserId
+      - description: request body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/UpdateUserRequest'
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      security:
+      - Bearer: []
+      summary: Update the user profile.
+      tags:
+      - users
+  /users/login:
+    post:
+      operationId: login
+      responses:
+        "200":
+          $ref: '#/responses/loginResponse'
+        "400":
+          $ref: '#/responses/genericError'
+      summary: Log user into system.
+      tags:
+      - users
   /users/register:
     post:
-      operationId: register
+      operationId: registerRequest
       parameters:
       - description: The Register request
         in: body
@@ -111,23 +307,36 @@ paths:
           $ref: '#/definitions/RegisterRequest'
       responses:
         "200":
-          $ref: '#/responses/UserResponse'
+          $ref: '#/responses/genericResponse'
         "400":
-          $ref: '#/responses/UserError'
+          $ref: '#/responses/genericError'
       summary: Register a new user account.
       tags:
       - users
 responses:
-  UserError:
-    description: A UserError is an error that is used when the required input fails
+  genericError:
+    description: A GenericError is an error that is used when the required input fails
       validation.
     schema:
-      $ref: '#/definitions/UserError'
-  UserResponse:
-    description: A UserResponse is an error that is used when the required input fails
-      validation.
+      $ref: '#/definitions/GenericError'
+  genericResponse:
+    description: A GenericResponse is a success status when the required is success.
     schema:
-      $ref: '#/definitions/UserResponse'
+      $ref: '#/definitions/GenericResponse'
+  getAllUserResponse:
+    description: A GetAllUserResponse will return the user information list when the
+      request is success.
+    schema:
+      $ref: '#/definitions/GetAllUserResponse'
+  getUserResponse:
+    description: A GetUserResponse will return the user information when the request
+      is success.
+    schema:
+      $ref: '#/definitions/GetUserResponse'
+  loginResponse:
+    description: A LoginResponse will return the token when the user is login successful.
+    schema:
+      $ref: '#/definitions/LoginResponse'
 schemes:
 - http
 securityDefinitions:

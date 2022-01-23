@@ -9,27 +9,31 @@ type User struct {
 
 	// max length: 100
 	// pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
-	Account string `gorm:"account; unique; type:varchar(100); not null;" json:"account" `
+	// example: a@gmail.com
+	Account string `gorm:"account; unique; type:varchar(100); not null;" json:"account,omitempty" `
 
 	// min length: 8
 	// max length: 30
 	// pattern: ^([a-zA-Z0-9]){8,30}$
-	Password string `gorm:"password; type:varchar(30); not null;" json:"password" `
+	// example: 12345678
+	// swagger:ignore
+	Password string `gorm:"password; type:varchar(30); not null;" json:"password,omitempty" `
 
 	// max length: 50
-	FirstName string `gorm:"first_name; type:varchar(50); not null;" json:"first_name" `
+	FirstName string `gorm:"first_name; type:varchar(50); not null;" json:"first_name,omitempty" `
 
 	// max length: 50
-	LastName string `gorm:"last_name; type:varchar(50); not null;" json:"last_name" `
+	LastName string `gorm:"last_name; type:varchar(50); not null;" json:"last_name,omitempty" `
 
-	Birthday time.Time `gorm:"birthday; not null;" json:"birthday" `
+	// example: 1970-01-01
+	Birthday time.Time `gorm:"birthday; not null;" json:"birthday,omitempty" `
 
 	// max length: 30
-	RefreshToken string `gorm:"refresh_token; type:varchar(30);" json:"refresh_token" `
+	RefreshToken string `gorm:"refresh_token; type:varchar(30);" json:"refresh_token,omitempty" `
 
-	CreatedAt time.Time `gorm:"created_at;" json:"created_at" `
+	CreatedAt time.Time `gorm:"created_at;" json:"created_at,omitempty" `
 
-	UpdatedAt time.Time `gorm:"updated_at;" json:"updated_at" `
+	UpdatedAt time.Time `gorm:"updated_at;" json:"updated_at,omitempty" `
 }
 
 type UserRepository interface {

@@ -1,7 +1,12 @@
 package entities
 
+// swagger:model
 type Token struct {
-	AccessToken  string `json:"access_token" `
+	// The API access token, made by JWT
+	AccessToken string `json:"access_token" `
+
+	// When access token was expired, you have to use this to refresh access token
+	// max length: 30
 	RefreshToken string `json:"refresh_token" `
 }
 
