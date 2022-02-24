@@ -30,14 +30,17 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/spf13/viper"
 
-	"gorm.io/driver/mysql"
+	goMySQL "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func init() {
-	viper.SetConfigFile("config.yaml")
+	viper.SetConfigFile("config.yml")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
@@ -53,7 +56,7 @@ func main() {
 	jwtKey := viper.GetString("key.jwtKey")
 
 	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, dbName)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(goMySQL.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -67,6 +70,24 @@ func main() {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(30)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	driver, err := mysql.WithInstance(sqlDB, &mysql.Config{})
+	if err != nil {
+		fmt.Println("driver error: " + err.Error())
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://./database/migrations",
+		"mysql",
+		driver,
+	)
+	if err != nil {
+		fmt.Println("error: " + err.Error())
+	}
+
+	if err := m.Up(); err != nil {
+		fmt.Println("migrate up error: " + err.Error())
+	}
 
 	tokenRepository := repo.NewTokenRepository(db)
 	tokenUsecase := usecase.NewTokenUsecase(jwtKey, tokenRepository)
