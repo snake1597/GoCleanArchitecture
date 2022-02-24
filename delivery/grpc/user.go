@@ -5,7 +5,6 @@ import (
 	pb "GoCleanArchitecture/proto/user"
 	"context"
 	"strconv"
-	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -27,17 +26,12 @@ func NewUserHandler(s *grpc.Server, userUsecase entities.UserUsecase, tokenUseca
 }
 
 func (h *UserHandler) Register(ctx context.Context, in *pb.RegisterRequest) (response *pb.UserResponse, err error) {
-	birthday, err := time.Parse("2006-01-02", in.GetBirthday())
-	if err != nil {
-		return nil, err
-	}
-
 	user := &entities.User{
 		Account:   in.GetAccount(),
 		Password:  in.GetPassword(),
 		FirstName: in.GetFirstName(),
 		LastName:  in.GetLastName(),
-		Birthday:  birthday,
+		Birthday:  in.GetBirthday(),
 	}
 
 	err = h.UserUsecase.Register(user)
@@ -87,7 +81,7 @@ func (h *UserHandler) GetUser(ctx context.Context, in *pb.UserRequest) (response
 		UserId:    strconv.Itoa(user.ID),
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
-		Birthday:  user.Birthday.Format("2006-01-02"),
+		Birthday:  user.Birthday,
 	}
 
 	return response, nil
@@ -105,7 +99,7 @@ func (h *UserHandler) GetAllUser(ctx context.Context, in *emptypb.Empty) (respon
 			UserId:    strconv.Itoa(user.ID),
 			FirstName: user.FirstName,
 			LastName:  user.LastName,
-			Birthday:  user.Birthday.Format("2006-01-02"),
+			Birthday:  user.Birthday,
 		}
 		list = append(list, a)
 	}
@@ -117,15 +111,10 @@ func (h *UserHandler) GetAllUser(ctx context.Context, in *emptypb.Empty) (respon
 }
 
 func (h *UserHandler) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (response *pb.UserResponse, err error) {
-	birthday, err := time.Parse("2006-01-02", in.GetBirthday())
-	if err != nil {
-		return nil, err
-	}
-
 	user := &entities.User{
 		FirstName: in.GetFirstName(),
 		LastName:  in.GetLastName(),
-		Birthday:  birthday,
+		Birthday:  in.GetBirthday(),
 	}
 
 	err = h.UserUsecase.UpdateUser(in.GetUserId(), user)

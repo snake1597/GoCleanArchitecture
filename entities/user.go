@@ -26,7 +26,7 @@ type User struct {
 	LastName string `gorm:"last_name; type:varchar(50); not null;" json:"last_name,omitempty" `
 
 	// example: 1970-01-01
-	Birthday time.Time `gorm:"birthday; not null;" json:"birthday,omitempty" `
+	Birthday string `gorm:"birthday; not null;" json:"birthday,omitempty" `
 
 	// max length: 30
 	RefreshToken string `gorm:"refresh_token; type:varchar(30);" json:"refresh_token,omitempty" `

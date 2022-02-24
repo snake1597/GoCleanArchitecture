@@ -42,7 +42,7 @@ func (u *userUsecase) Register(user *entities.User) (err error) {
 		return fmt.Errorf("last name can not be empty")
 	}
 
-	if user.Birthday.IsZero() {
+	if user.Birthday == "" {
 		return fmt.Errorf("birthday can not be empty")
 	}
 
@@ -101,8 +101,8 @@ func (u *userUsecase) UpdateUser(id string, user *entities.User) (err error) {
 		data["lastName"] = user.LastName
 	}
 
-	if !user.Birthday.IsZero() {
-		data["birthday"] = user.Birthday.Format("2006-01-02")
+	if user.Birthday != "" {
+		data["birthday"] = user.Birthday
 	}
 
 	err = u.userRepo.UpdateUser(id, data)
