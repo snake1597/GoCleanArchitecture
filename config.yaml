@@ -1,9 +1,0 @@
-database:
- user: root
- password: arthur
- host: db
- port: 3306
- name: arthur
-
-key:
- jwtKey: arthur
