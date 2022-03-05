@@ -1,0 +1,9 @@
+database:
+ user: 
+ password: 
+ host: 
+ port: 
+ name: 
+
+key:
+ jwtKey: 
