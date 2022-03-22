@@ -52,7 +52,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, swagger.GenericResponse{Status: "success"})
 }
 
-// swagger:route POST /users/login users login
+// swagger:route POST /users/login users loginRequest
 // Log user into system.
 // Responses:
 // 	200: loginResponse

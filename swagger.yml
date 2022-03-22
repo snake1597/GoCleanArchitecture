@@ -47,6 +47,28 @@ definitions:
         x-go-name: Status
     type: object
     x-go-package: GoCleanArchitecture/docs/swagger
+  LoginRequest:
+    properties:
+      account:
+        description: The user account
+        example: a@gmail.com
+        maxLength: 100
+        pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
+        type: string
+        x-go-name: Account
+      password:
+        description: The user password
+        example: "12345678"
+        maxLength: 30
+        minLength: 8
+        pattern: ^([a-zA-Z0-9]){8,30}$
+        type: string
+        x-go-name: Password
+    required:
+    - account
+    - password
+    type: object
+    x-go-package: GoCleanArchitecture/docs/swagger
   LoginResponse:
     properties:
       data:
@@ -142,7 +164,6 @@ definitions:
         x-go-name: Account
       birthday:
         example: "1970-01-01"
-        format: date-time
         type: string
         x-go-name: Birthday
       created_at:
@@ -287,7 +308,13 @@ paths:
       - users
   /users/login:
     post:
-      operationId: login
+      operationId: loginRequest
+      parameters:
+      - description: The Register request
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/LoginRequest'
       responses:
         "200":
           $ref: '#/responses/loginResponse'

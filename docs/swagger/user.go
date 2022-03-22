@@ -73,6 +73,30 @@ type UserIdRequest struct {
 	UserId int `json:"userId"`
 }
 
+// swagger:parameters loginRequest
+type LoginRequestWrapper struct {
+	// The Register request
+	// in: body
+	Body LoginRequest
+}
+
+type LoginRequest struct {
+	// The user account
+	// required: true
+	// max length: 100
+	// pattern: ^([a-zA-Z0-9.])*@([a-zA-Z0-9])*\.([a-zA-Z0-9])*
+	// example: a@gmail.com
+	Account string `json:"account" `
+
+	// The user password
+	// required: true
+	// min length: 8
+	// max length: 30
+	// pattern: ^([a-zA-Z0-9]){8,30}$
+	// example: 12345678
+	Password string `json:"password" `
+}
+
 // A LoginResponse will return the token when the user is login successful.
 // swagger:response loginResponse
 type LoginResponseWrapper struct {
