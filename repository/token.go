@@ -3,15 +3,17 @@ package repository
 import (
 	"GoCleanArchitecture/entities"
 
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
 type tokenRepository struct {
-	db *gorm.DB
+	db      *gorm.DB
+	redisDB *redis.Client
 }
 
-func NewTokenRepository(db *gorm.DB) entities.TokenRepository {
-	return &tokenRepository{db}
+func NewTokenRepository(db *gorm.DB, redisDB *redis.Client) entities.TokenRepository {
+	return &tokenRepository{db, redisDB}
 }
 
 func (r *tokenRepository) UpdateRefreshToken(id string, refreshToken string) (err error) {

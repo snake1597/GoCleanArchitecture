@@ -35,6 +35,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/spf13/viper"
 
+	"github.com/go-redis/redis/v8"
 	goMySQL "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -89,7 +90,13 @@ func main() {
 		fmt.Println("migrate up error: " + err.Error())
 	}
 
-	tokenRepository := repo.NewTokenRepository(db)
+	redisDB := redis.NewClient(&redis.Options{
+		Addr:     "redis:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	tokenRepository := repo.NewTokenRepository(db, redisDB)
 	tokenUsecase := usecase.NewTokenUsecase(jwtKey, tokenRepository)
 
 	userRepo := repo.NewUserRepository(db)

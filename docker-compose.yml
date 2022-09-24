@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - db
+      - redis
     ports:
       - 8080:8080
     restart: always
@@ -20,3 +21,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    restart: always

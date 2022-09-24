@@ -10,9 +10,7 @@ RUN go mod download
 
 COPY . .
 
-ENV PORT 8080 
-
-RUN go build
+RUN CGO_ENABLED=0 go build -o GoCleanArchitecture
 
 FROM alpine
 
@@ -27,5 +25,7 @@ COPY --from=builder /app/database /app/database
 COPY --from=builder /app/GoCleanArchitecture /app/
 
 RUN apk add --no-cache bash
+
+ENV PORT 8080 
 
 CMD ["./wait-for-it.sh", "db:3306", "--", "./GoCleanArchitecture"]
