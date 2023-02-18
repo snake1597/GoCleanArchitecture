@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - db
-      - redis
-    ports:
-      - 8080:8080
-    restart: always
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   ports:
+  #     - 8080:8080
+  #   restart: always
   db:
     image: mysql:8.0
     container_name: mysql
@@ -21,6 +21,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
   redis:
     image: redis
     container_name: redis
